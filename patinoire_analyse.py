@@ -6,3 +6,5 @@ try:
     from patinoire_fct import *
 except:
     pass
+
+"test"
