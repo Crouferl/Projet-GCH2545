@@ -1,7 +1,7 @@
 #Importation des modules 
 
 
-#Fonctions à faire :
+#Fonctions à faire : test nico
 
 # Optimiser nombre de points (Optionnel)
     #Input : erreur voulue
