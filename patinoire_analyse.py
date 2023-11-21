@@ -18,8 +18,8 @@ except:
 #Définir paramètres du problème
 
 class parametre():
-    zb = 5 #[cm]
-    zg = 10 #[cm]
+    zb = 0.05 #[m]
+    zg = 0.10 #[m]
     alpha_b = 0.54 #[ms−1]
     alpha_g = 1.203 #[ms−1]
     k_b = 0.6 #[Wm−1 K−1]
