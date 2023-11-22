@@ -69,7 +69,7 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
     
     ci = np.ones(n_points)*prm.Ti
 
-    points_temps = np.linspace(0,tf,dt,dtype="float")
+    points_temps = np.arange(0,tf,dt,dtype="float")
     temperature_store = np.zeros((n_points,len(points_temps))) #Matrice pour enregister les résulats finals
     temp = np.zeros(n_points) #Matrice temporaire pour stocker le résultat de chaque itération
     
@@ -88,10 +88,10 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
 
             if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
                    
-                A[k,k-2] = -1
-                A[k,k-1] = 4
-                A[k,k] = (2*dz*prm.h_l)/(prm.k_b) - 3
-                B[k] = (2*dz*prm.h_l*t_L[i,1])/(prm.k_b) 
+                A[k,k-2] = 1
+                A[k,k-1] = -4
+                A[k,k] = 3- (2*dz*prm.h_l)/(prm.k_b) 
+                B[k] = -(2*dz*prm.h_l*t_L[i,1])/(prm.k_b) 
 
             elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
                 A[k,k] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
@@ -204,7 +204,7 @@ def interpolation_Tair(temps_interpo):
         - temps_interpo : Temps auquel on cherche la Température
 
     Sorties (dans l'ordre énuméré ci-bas):
-        - Temperature_interpo : Température interpolée au temps temps_interpo
+        - temperature_interpo : Température interpolée au temps temps_interpo
 
     """
     temps = [0, 2, 7, 15, 45, 90]  #Valeurs de temps spécifiés dans la question
@@ -213,20 +213,19 @@ def interpolation_Tair(temps_interpo):
         
     temperature = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ] #Valeurs de température spécifiées dans la question
 
-    n = len(temps) #Nombre de pts, (Degré du polynôme = n-1)
-
-    Temperature_interpo = 0 
-
+    n = len(temps)
+    omega = 0
     for i in range(n):
-        p=1
-        for j in range(n):
-            if j != i:
-                p = p * (temps_interpo - temps[j])/(temps[i] - temps[j]) #Permet de trouver les polynôme L[i](temps)
-                
-        Temperature_interpo = Temperature_interpo + temperature[i]*p #T = f(x_0)L_0(x) + f(x_1)L_1(x) + ... + f(x_n-1)L_n-1(x)
+        if temps_interpo == temps[i]:
+            return temperature[i]
         
-    return Temperature_interpo
+        elif temps_interpo > temps[i] and temps_interpo < temps[i+1]:
+            omega = i 
 
+    return interpoler([temps[omega],temps[omega+1]],[temperature[omega],temperature[omega+1]],temps_interpo)
+
+    
+    
 
 "Si nécessaire (On l'effacera sinon)."
 def interpoler(x,y,x_interpo):
