@@ -19,20 +19,25 @@ def temperature_liquide(t) :
         - temp_liquide : array tf/dt x 2 [Temps, température liquide]
         
     """
-    n_step = tf//dt
-    temp_liquide = np.zeros(n_step,2)
+
+    temp_liquide = np.zeros((len(t),2))
+    increment_temp = -1
     temp_instant = -1
     
+    
     for i,t in enumerate(t):
+        minute = t//60
+        
+        if temp_instant >-15 :
+            temp_instant = -1 + increment_temp*minute
+        else :
+            temp_instant = -15
+        
         
         temp_liquide[i,0] = t
         temp_liquide[i,1] = temp_instant
         
-        if temp_instant >-15 :
-            temp_instant -=1
-        else :
-            temp_instant = -15
-        
+       
     return temp_liquide
 
 
@@ -59,13 +64,13 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
     n_points = nx*nz #Nombre de points dans la discrétisation
 
     #Pas de discrétisation du domaine physique
-    dx = abs((X[1]-X[0])/(nx-1))
-    dz = abs((Z[1]-Z[0])/(nz-1))
+    dx = abs((X_limit[1]-X_limit[0])/(nx-1))
+    dz = abs((Z_limit[1]-Z_limit[0])/(nz-1))
     
     ci = np.ones(n_points)*prm.Ti
 
-
-    temperature_store = np.zeros(len(points_temps)) #Matrice pour enregister les résulats finals
+    points_temps = np.linspace(0,tf,dt,dtype="float")
+    temperature_store = np.zeros((n_points,len(points_temps))) #Matrice pour enregister les résulats finals
     temp = np.zeros(n_points) #Matrice temporaire pour stocker le résultat de chaque itération
     
     t_L = temperature_liquide(points_temps)
@@ -73,8 +78,8 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
     for i,t in enumerate(points_temps) : #Boucle pour itérer sur chaque point de temps
 
         #Initialiser les matrices de différence finie
-        A = np.zeros(len(n_points,n_points))
-        B = np.zeros(len(n_points))
+        A = np.zeros((n_points,n_points))
+        B = np.zeros(n_points)
         
         for k in range(0,n_points) : #Boucle pour itérer sur l'espace
             X = points[k,1]
@@ -83,16 +88,16 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
 
             if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
                    
-                A[i,i+2] = -1
-                A[i,i+1] = 4
-                A[i,i] = (2*dz*prm.h_l)/(prm.k_b) - 3
-                B[i] = (2*dz*prm.h_l*t_L[i])/(prm.k_b) 
+                A[k,k-2] = -1
+                A[k,k-1] = 4
+                A[k,k] = (2*dz*prm.h_l)/(prm.k_b) - 3
+                B[k] = (2*dz*prm.h_l*t_L[i,1])/(prm.k_b) 
 
             elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
-                A[i,i] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
-                A[i,i-1] = (-4)/(2*dz)
-                A[i,i-2] = 1/(2*dz)
-                B[i] = (prm.h_air*interpolation_Tair(t))/prm.k_g  #!!!!! FONCTION D'INTERPOLATION DE TAIR À VALIDER
+                A[k,k] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
+                A[k,k-1] = (-4)/(2*dz)
+                A[k,k-2] = 1/(2*dz)
+                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g  #!!!!! FONCTION D'INTERPOLATION DE TAIR À VALIDER
             
             else : #Remplir le coeur de la matrice
                 
@@ -101,16 +106,16 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
                 else : 
                     alpha = prm.alpha_g
                     
-                A[i,i+1] = -(alpha*dt)/(dz**2)
-                A[i,i] = 1 +(2*alpha*dt)/(dz**2)
-                A[i,i-1] = -(alpha*dt)/(dz**2)
-                B[i] = ci[i]
+                A[k,k+1] = -(alpha*dt)/(dz**2)
+                A[k,k] = 1 +(2*alpha*dt)/(dz**2)
+                A[k,k-1] = -(alpha*dt)/(dz**2)
+                B[k] = ci[k]
                 
         temp = np.linalg.solve(A,B) 
 
         ci = temp.copy() 
 
-        temperature_store[i] = temp 
+        temperature_store[:,i] = temp 
 
     return points_temps, temperature_store 
 

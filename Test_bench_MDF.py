@@ -33,3 +33,21 @@ class parametre():
 prm = parametre()
 #-----------------------------------------------------------------------------
 
+prm = parametre()
+
+X = [-1,1]
+Z = [0,prm.zb+prm.zg]
+
+nx = 2
+nz = 5
+dt = 60
+tf = 900
+
+
+temperature_glace = mdf(X,Z,nx,nz,prm,dt,tf)
+
+
+
+
+
+
