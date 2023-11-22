@@ -203,6 +203,9 @@ def interpolation_Tair(temps_interpo):
 
     """
     temps = [0, 2, 7, 15, 45, 90]  #Valeurs de temps spécifiés dans la question
+    for i in range(len(temps)):
+        temps[i] = temps[i]*60
+        
     temperature = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ] #Valeurs de température spécifiées dans la question
 
     n = len(temps) #Nombre de pts, (Degré du polynôme = n-1)
@@ -214,8 +217,6 @@ def interpolation_Tair(temps_interpo):
         for j in range(n):
             if j != i:
                 p = p * (temps_interpo - temps[j])/(temps[i] - temps[j]) #Permet de trouver les polynôme L[i](temps)
-                
-        print(p)
                 
         Temperature_interpo = Temperature_interpo + temperature[i]*p #T = f(x_0)L_0(x) + f(x_1)L_1(x) + ... + f(x_n-1)L_n-1(x)
         
