@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#Fonctions à faire : test nico
+
 
 # Optimiser nombre de points (Optionnel)
     #Input : erreur voulue
@@ -119,10 +119,86 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
 
     return points_temps, temperature_store 
 
+def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
+    
+    """Fonction qui résoud le problème de différence fini et calcule la position pour chaque point pour chaque pas de temps
+    Entrées:
+        - X : Bornes du domaine en x, X = [x_min, x_max]
+        - Z : Bornes du domaine en z, Z = [z_min, z_max]
+        - nx : Discrétisation de l'espace en x (nombre de points)
+        - nz : Discrétisation de l'espace en z (nombre de points)
+        - prm : objet contenant tous les paramètres physiques du problème
+        - dt : pas de temps 
+        - tf : temps final
 
-# Plot (Optionnel) : 
-    #Input : titre, noms des axes 
-    #Out : oject figure
+    Sortie (dans l'ordre énuméré ci-bas):
+        - points_temps : Array contenants les points de temps où la température a été calculée
+        - temperature_store : Array contenant la température pour chaque point à chaque point de temps 
+            - [[température Temps 0],[Températeur Temp 1].....]
+        
+    """
+    X_pos, Z_pos = mesh(X_limit,Z_limit,nx,nz) #Créer les matrices des positions pour les deux dimensions
+    points = numeroter_mesh(X_pos,Z_pos) #Créer la matrices avec les positions et les adresses de chaque points
+    n_points = nx*nz #Nombre de points dans la discrétisation
+
+    #Pas de discrétisation du domaine physique
+    dx = abs((X_limit[1]-X_limit[0])/(nx-1))
+    dz = abs((Z_limit[1]-Z_limit[0])/(nz-1))
+    
+    ci = np.ones(n_points)*prm.Ti
+
+    points_temps = np.arange(0,tf,dt,dtype="float")
+    temperature_store = np.zeros((n_points,len(points_temps))) #Matrice pour enregister les résulats finals
+    temp = np.zeros(n_points) #Matrice temporaire pour stocker le résultat de chaque itération
+    
+    t_L = temperature_liquide(points_temps)
+
+    for i,t in enumerate(points_temps) : #Boucle pour itérer sur chaque point de temps
+
+        #Initialiser les matrices de différence finie
+        A = np.zeros((n_points,n_points))
+        B = np.zeros(n_points)
+        
+        for k in range(0,n_points) : #Boucle pour itérer sur l'espace
+            X = points[k,1]
+            Z = points[k,2]
+
+            if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
+                   
+                A[k,k-2] = 1
+                A[k,k-1] = -4
+                A[k,k] = 3- (2*dz*prm.h_l)/(prm.k_b) 
+                B[k] = -(2*dz*prm.h_l*t_L[i,1])/(prm.k_b) 
+
+            elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
+                A[k,k] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
+                A[k,k-1] = (-4)/(2*dz)
+                A[k,k-2] = 1/(2*dz)
+                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g  
+            
+            
+            else : #Remplir le coeur de la matrice
+                
+                if Z < prm.zb : #Vérifier si le point est dans la glace ou dans le béton
+                    alpha = prm.alpha_b 
+                else : 
+                    alpha = prm.alpha_g
+                    
+                A[k,k+1] = 1
+                A[k,k] = -2
+                A[k,k-1] = 1
+                B[k] = 0
+                
+        temp = np.linalg.solve(A,B) 
+
+        ci = temp.copy() 
+
+        temperature_store[:,i] = temp 
+
+    return points_temps, temperature_store 
+
+
+
 
 
 def numeroter_mesh(X,Z) :
@@ -251,5 +327,36 @@ def interpoler(x,y,x_interpo):
         y_interpo = y_interpo + y[i]*p #T = f(x_0)L_0(x) + f(x_1)L_1(x) + ... + f(x_n-1)L_n-1(x)
         
     return y_interpo
+
+
+def fonction_plot(x_data_list, y_data_list, list_labels, xlabel='', ylabel='', title='', grid=True, legend=True):
+    """fonction permettant de tracer une ou plusieurs courbes.
+    
+    Entrées:
+        - vecteur_x : vecteur de données pour l'abscice'
+        - vecteur_y : vecteur de données pour l'ordonné
+        - list_label : liste de label pour les courbes
+        - x_label : Titre abscise (string)
+        - y_label : Titre ordonné (string)
+        - title : Tire du graphique (string)
+        
+        
+    Sorties
+        - graphique de une ou plusieurs courbes
+    """
+    for i in range(len(x_data_list)):
+        plt.plot(x_data_list[i], y_data_list[i], label=list_labels[i])
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    
+    if grid:
+        plt.grid()
+    
+    if legend:
+        plt.legend()
+    
+    plt.show()
 
 
