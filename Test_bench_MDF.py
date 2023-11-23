@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import pytest
 try:
     from patinoire_fct import *
-    from patinoire_mdf_permanent import *
+
 except:
     pass
 

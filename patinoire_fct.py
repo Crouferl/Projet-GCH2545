@@ -151,7 +151,8 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
     temperature_store = np.zeros((n_points,len(points_temps))) #Matrice pour enregister les résulats finals
     temp = np.zeros(n_points) #Matrice temporaire pour stocker le résultat de chaque itération
     
-    t_L = temperature_liquide(points_temps)
+    T_l = -15
+    T_air = 14
 
     for i,t in enumerate(points_temps) : #Boucle pour itérer sur chaque point de temps
 
@@ -168,13 +169,13 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
                 A[k,k-2] = 1
                 A[k,k-1] = -4
                 A[k,k] = 3- (2*dz*prm.h_l)/(prm.k_b) 
-                B[k] = -(2*dz*prm.h_l*t_L[i,1])/(prm.k_b) 
+                B[k] = -(2*dz*prm.h_l*T_l)/(prm.k_b) 
 
             elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
                 A[k,k] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
                 A[k,k-1] = (-4)/(2*dz)
                 A[k,k-2] = 1/(2*dz)
-                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g  
+                B[k] = (prm.h_air*T_air)/prm.k_g  
             
             
             else : #Remplir le coeur de la matrice
