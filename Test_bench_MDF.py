@@ -78,15 +78,15 @@ tick = np.linspace(1,2,11)
 fig,ax = plt.subplots(nrows=1,ncols=2,figsize=(16,16))
 
 
-fig1 = ax[0].pcolormesh(x,z,temp_reshaped)
-fig2 = ax[1].pcolormesh(x,z,temp_reshaped_permanent)
-ax[0].set_title('mdf transitoire')  
-ax[1].set_title('mdf regime permanent')  
+fig1 = ax[0].pcolormesh(x,z,temp_reshaped,cmap="coolwarm")
+fig2 = ax[1].pcolormesh(x,z,temp_reshaped_permanent,cmap="coolwarm")
+ax[0].set_title('MDF transitoire')  
+ax[1].set_title('MDF regime permanent')  
 
 plt.colorbar(fig1, ax=ax[1],label="Température")
 
 
-plt.suptitle("Distribution de la température de la patinoire à 90m",fontsize=30)
+plt.suptitle("Distribution de la température de la patinoire à 90 minutes",fontsize=30)
 
 ax[0].set_xlabel("Axe x [m]",fontsize=15)
 ax[1].set_xlabel("Axe x [m]",fontsize=15)
