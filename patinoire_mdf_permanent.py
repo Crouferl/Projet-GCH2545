@@ -72,13 +72,13 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
                 A[k,k] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
                 A[k,k-1] = (-4)/(2*dz)
                 A[k,k-2] = 1/(2*dz)
-                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g  #!!!!! FONCTION D'INTERPOLATION DE TAIR À VALIDER
+                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g  
             
             
             else : #Remplir le coeur de la matrice
                 
                 if Z < prm.zb : #Vérifier si le point est dans la glace ou dans le béton
-                    alpha = prm.alpha_b #
+                    alpha = prm.alpha_b 
                 else : 
                     alpha = prm.alpha_g
                     
