@@ -1,43 +1,20 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov 22 09:00:38 2023
+Created on Wed Nov 22 09:13:26 2023
 
-@author: nigui
+@author: nicolasguillemette
 """
 
+#Importation des modules 
 import numpy as np
 import matplotlib.pyplot as plt
+import pytest
 try:
     from patinoire_fct import *
 except:
     pass
 
-
-def temperature_liquide(t) :
-    
-    """Fonction qui retourne un array de la température du liquide en fonction du temps
-    Entrées:
-        - t = array de point de temps de 0 à tf
-
-    Sortie (dans l'ordre énuméré ci-bas):
-        - temp_liquide : array tf/dt x 2 [Temps, température liquide]
-        
-    """
-    n_step = tf//dt
-    temp_liquide = np.zeros(n_step,2)
-    temp_instant = -1
-    
-    for i,t in enumerate(t):
-        
-        temp_liquide[i,0] = t
-        temp_liquide[i,1] = temp_instant
-        
-        if temp_instant >-15 :
-            temp_instant -=1
-        else :
-            temp_instant = -15
-        
-    return temp_liquide
 
 
 def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
@@ -83,7 +60,6 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
         for k in range(0,n_points) : #Boucle pour itérer sur l'espace
             X = points[k,1]
             Z = points[k,2]
-            
 
             if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
                    
@@ -98,6 +74,7 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
                 A[k,k-2] = 1/(2*dz)
                 B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g  #!!!!! FONCTION D'INTERPOLATION DE TAIR À VALIDER
             
+            
             else : #Remplir le coeur de la matrice
                 
                 if Z < prm.zb : #Vérifier si le point est dans la glace ou dans le béton
@@ -105,10 +82,10 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
                 else : 
                     alpha = prm.alpha_g
                     
-                A[k,k+1] = -(alpha*dt)/(dz**2)
-                A[k,k] = 1 +(2*alpha*dt)/(dz**2)
-                A[k,k-1] = -(alpha*dt)/(dz**2)
-                B[k] = ci[k]
+                A[k,k+1] = 1
+                A[k,k] = -2
+                A[k,k-1] = 1
+                B[k] = 0
                 
         temp = np.linalg.solve(A,B) 
 
