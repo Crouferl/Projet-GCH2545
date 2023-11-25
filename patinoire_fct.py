@@ -82,23 +82,24 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
         B = np.zeros(n_points)
         
         for k in range(0,n_points) : #Boucle pour itérer sur l'espace
-            X = points[k,1]
-            Z = points[k,2]
+            X = points[k,0]
+            Z = points[k,1]
             
 
             if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
                    
-                A[k,k-2] = 1
-                A[k,k-1] = -4
-                A[k,k] = 3- (2*dz*prm.h_l)/(prm.k_b) 
-                B[k] = -(2*dz*prm.h_l*t_L[i,1])/(prm.k_b) 
-
-            elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
-                A[k,k] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
-                A[k,k-1] = (-4)/(2*dz)
-                A[k,k-2] = 1/(2*dz)
-                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g  #!!!!! FONCTION D'INTERPOLATION DE TAIR À VALIDER
+                A[k,k+2] = -1/(2*dz)
+                A[k,k+1] = 4/(2*dz)
+                A[k,k] = -3/(2*dz) - (prm.h_l/prm.k_b) 
+                B[k] = (prm.h_l*t_L[i,1])/(prm.k_b)
             
+            elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
+                A[k,k-2] = 1/(2*dz)
+                A[k,k-1] = (-4)/(2*dz)
+                A[k,k] = 3/(2*dz) + prm.h_air/prm.k_g
+                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g 
+                
+                
             else : #Remplir le coeur de la matrice
                 
                 if Z < prm.zb : #Vérifier si le point est dans la glace ou dans le béton
@@ -161,8 +162,8 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
         B = np.zeros(n_points)
         
         for k in range(0,n_points) : #Boucle pour itérer sur l'espace
-            X = points[k,1]
-            Z = points[k,2]
+            X = points[k,0]
+            Z = points[k,1]
 
             if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
                    
@@ -173,8 +174,8 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
 
             elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
                 A[k,k] = (3)/(2*dz) + (prm.h_air)/(prm.k_g)
-                A[k,k-1] = (-4)/(2*dz)
-                A[k,k-2] = 1/(2*dz)
+                A[k,k+1] = (-4)/(2*dz)
+                A[k,k+2] = 1/(2*dz)
                 B[k] = (prm.h_air*T_air)/prm.k_g  
             
             
@@ -215,14 +216,14 @@ def numeroter_mesh(X,Z) :
     nx = len(X[0,:]) #Récupérer nombre de points en x
     nz = len(Z[:,0]) #Récupérer nombre de points en z
     n_points = nx*nz #Nombre total de points
-    points_pos = np.zeros((n_points,3)) #Matrice de point numérotés
+    points_pos = np.zeros((n_points,2)) #Matrice de point numérotés
 
     for k in range(0,n_points) :
         i_x = k//nz #Indice pour parcourir matrice X
         j_z = k-nz*(k//nz) #Indice pour parcourir matrice Z
         x = X[1,i_x] 
-        z = Z[j_z,1]
-        points_pos[k,:] = [k,x,z] # Remplir matrice point_pos
+        z = Z[(nz-1)-j_z,1]
+        points_pos[k,:] = [x,z] # Remplir matrice point_pos
 
     return points_pos
     

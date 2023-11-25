@@ -40,14 +40,14 @@ X = [-1,1]
 Z = [0,prm.zb+prm.zg]
 
 nx = 2
-nz = 100
+nz = 4
 dt = 60
 tf = 5400
 
 a = plt.figure(1)
 
 temperature_glace = mdf(X,Z,nx,nz,prm,dt,tf)
-temperature_glace_permanent = mdf_permanent(X,Z,nx,nz,prm,dt,tf)
+#temperature_glace_permanent = mdf_permanent(X,Z,nx,nz,prm,dt,tf)
 
 
 plt.plot(temperature_glace[0],(temperature_glace[1][0,:]))
@@ -58,11 +58,11 @@ plt.legend(["Glace","Béton"])
 
 #--plot mdf_permanent--#
 
-plt.plot(temperature_glace_permanent[0],(temperature_glace_permanent[1][0,:]))
+# plt.plot(temperature_glace_permanent[0],(temperature_glace_permanent[1][0,:]))
 
-plt.plot(temperature_glace_permanent[0],(temperature_glace_permanent[1][1,:]))
+# plt.plot(temperature_glace_permanent[0],(temperature_glace_permanent[1][1,:]))
 
-plt.legend(["Glace","Béton"])
+# plt.legend(["Glace","Béton"])
 
 
 x,z = mesh(X, Z, nx, nz)
@@ -70,7 +70,7 @@ x,z = mesh(X, Z, nx, nz)
 # Graphiques de type color maps
 
 temp_reshaped = temperature_glace[1][:,1].reshape(nx,nz).transpose()
-temp_reshaped_permanent = temperature_glace_permanent[1][:,1].reshape(nx,nz).transpose()
+# temp_reshaped_permanent = temperature_glace_permanent[1][:,1].reshape(nx,nz).transpose()
 
 
 tick = np.linspace(1,2,11)
@@ -79,7 +79,7 @@ fig,ax = plt.subplots(nrows=1,ncols=2,figsize=(16,16))
 
 
 fig1 = ax[0].pcolormesh(x,z,temp_reshaped,cmap="coolwarm")
-fig2 = ax[1].pcolormesh(x,z,temp_reshaped_permanent,cmap="coolwarm")
+# fig2 = ax[1].pcolormesh(x,z,temp_reshaped_permanent,cmap="coolwarm")
 ax[0].set_title('MDF transitoire')  
 ax[1].set_title('MDF regime permanent')  
 
