@@ -330,7 +330,7 @@ def interpoler(x,y,x_interpo):
     return y_interpo
 
 
-def fonction_plot(x_data_list, y_data_list, list_labels, xlabel='', ylabel='', title='', grid=True, legend=True):
+def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, xlabel='', ylabel='', title='', grid=True, legend=True):
     """fonction permettant de tracer une ou plusieurs courbes.
     
     Entrées:
@@ -346,7 +346,7 @@ def fonction_plot(x_data_list, y_data_list, list_labels, xlabel='', ylabel='', t
         - graphique de une ou plusieurs courbes
     """
     for i in range(len(x_data_list)):
-        plt.plot(x_data_list[i], y_data_list[i], label=list_labels[i])
+        plt.plot(x_data_list[i], y_data_list[i], label=list_labels[i], linestyle=list_linestyles[i])
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -357,6 +357,8 @@ def fonction_plot(x_data_list, y_data_list, list_labels, xlabel='', ylabel='', t
     
     if legend:
         plt.legend()
+        
+    # plt.savefig(nom_enregistrement,dpi=300)
     
     plt.show()
 
