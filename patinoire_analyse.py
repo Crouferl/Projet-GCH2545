@@ -1,6 +1,6 @@
 #Auteurs 
 #Nicolas Guillemette (2081046)
-#Raphael Louis-Seize (MATRICULE)
+#Raphael Louis-Seize (2144924)
 #Léo Croufer (2001374)
 
 # Importation des modules
