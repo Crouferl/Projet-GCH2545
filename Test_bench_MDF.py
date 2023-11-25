@@ -42,7 +42,7 @@ Z = [0,prm.zb+prm.zg]
 nx = 2
 nz = 100
 dt = 60
-tf = 5340
+tf = 5400
 
 a = plt.figure(1)
 
@@ -95,6 +95,6 @@ ax[0].set_ylabel("Hauteur z [m]",fontsize=15)
 
 
 
-
+pytest.main(['-q', '--tb=long', 'patinoire_corr.py'])
 
 

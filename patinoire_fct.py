@@ -69,7 +69,7 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
     
     ci = np.ones(n_points)*prm.Ti
 
-    points_temps = np.arange(0,tf,dt,dtype="float")
+    points_temps = np.arange(0,tf+60,dt,dtype="float")
     temperature_store = np.zeros((n_points,len(points_temps))) #Matrice pour enregister les résulats finals
     temp = np.zeros(n_points) #Matrice temporaire pour stocker le résultat de chaque itération
     
@@ -147,7 +147,7 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
     
     ci = np.ones(n_points)*prm.Ti
 
-    points_temps = np.arange(0,tf,dt,dtype="float")
+    points_temps = np.arange(0,tf+60,dt,dtype="float")
     temperature_store = np.zeros((n_points,len(points_temps))) #Matrice pour enregister les résulats finals
     temp = np.zeros(n_points) #Matrice temporaire pour stocker le résultat de chaque itération
     
