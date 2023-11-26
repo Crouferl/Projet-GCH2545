@@ -375,7 +375,7 @@ def mdf_1D_permanent(Z_limit,nz,prm,dt,tf) :
                 A[k,k+1] = -(alpha*dt)/(dz**2)
                 A[k,k] = 1 +(2*alpha*dt)/(dz**2)
                 A[k,k-1] = -(alpha*dt)/(dz**2)
-                B[k] = ci[k]
+                B[k] = 0
                 
         temp = np.linalg.solve(A,B) 
 
