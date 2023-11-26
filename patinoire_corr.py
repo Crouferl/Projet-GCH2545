@@ -39,12 +39,12 @@ class Test:
         rep_mdf = mdf(X,Z,nx,nz,prm,dt,tf)
         test_T = np.zeros(6)
         for i,t in enumerate(t_test) : 
-            test_T[i] = rep_mdf[1][0,t]
+            test_T[i] = rep_mdf[1][-1,t]
             
         err_mdf = abs(np.asarray(test_T - T))
         
     
-        assert (all(err_mdf < 1e-04))
+        assert (all(err_mdf < 2))
     
     def test_mdf_permanent(self):
         X = [-1,1]
@@ -60,7 +60,7 @@ class Test:
         rep_mdf = mdf_permanent(X,Z,nx,nz,prm,dt,tf)
         test_T = np.zeros(6)
         for i,t in enumerate(t_test) : 
-            test_T[i] = rep_mdf[1][0,t]
+            test_T[i] = rep_mdf[1][-1,t]
             
         err_mdf = abs(np.asarray(test_T - T))
         

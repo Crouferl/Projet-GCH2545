@@ -40,7 +40,7 @@ X = [-1,1]
 Z = [0,prm.zb+prm.zg]
 
 nx = 2
-nz = 4
+nz = 5
 dt = 60
 tf = 5400
 
@@ -55,6 +55,9 @@ plt.plot(temperature_glace[0],(temperature_glace[1][0,:]))
 plt.plot(temperature_glace[0],(temperature_glace[1][1,:]))
 
 plt.legend(["Glace","Béton"])
+
+#plt.savefig("Images/Test.png",dpi=300)
+
 
 #--plot mdf_permanent--#
 
@@ -79,7 +82,7 @@ fig,ax = plt.subplots(nrows=1,ncols=2,figsize=(16,16))
 
 
 fig1 = ax[0].pcolormesh(x,z,temp_reshaped,cmap="coolwarm")
-# fig2 = ax[1].pcolormesh(x,z,temp_reshaped_permanent,cmap="coolwarm")
+fig2 = ax[1].pcolormesh(x,z,temp_reshaped_permanent,cmap="coolwarm")
 ax[0].set_title('MDF transitoire')  
 ax[1].set_title('MDF regime permanent')  
 

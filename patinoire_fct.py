@@ -91,7 +91,7 @@ def mdf(X_limit,Z_limit,nx,nz,prm,dt,tf) :
                 A[k,k+2] = -1/(2*dz)
                 A[k,k+1] = 4/(2*dz)
                 A[k,k] = -3/(2*dz) - (prm.h_l/prm.k_b) 
-                B[k] = (prm.h_l*t_L[i,1])/(prm.k_b)
+                B[k] = -(prm.h_l*t_L[i,1])/(prm.k_b)
             
             elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
                 A[k,k-2] = 1/(2*dz)
@@ -167,9 +167,9 @@ def mdf_permanent(X_limit,Z_limit,nx,nz,prm,dt,tf) :
 
             if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
                    
-                A[k,k-2] = 1
-                A[k,k-1] = -4
-                A[k,k] = 3- (2*dz*prm.h_l)/(prm.k_b) 
+                A[k,k-2] = -1
+                A[k,k-1] = 4
+                A[k,k] = -3-(2*dz*prm.h_l)/(prm.k_b) 
                 B[k] = -(2*dz*prm.h_l*T_l)/(prm.k_b) 
 
             elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
@@ -331,7 +331,7 @@ def interpoler(x,y,x_interpo):
     return y_interpo
 
 
-def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, xlabel='', ylabel='', title='', grid=True, legend=True):
+def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles,savename='', xlabel='', ylabel='', title='', grid=True, legend=True):
     """fonction permettant de tracer une ou plusieurs courbes.
     
     Entrées:
@@ -346,8 +346,12 @@ def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, xlabel
     Sorties
         - graphique de une ou plusieurs courbes
     """
-    for i in range(len(x_data_list)):
-        plt.plot(x_data_list[i], y_data_list[i], label=list_labels[i], linestyle=list_linestyles[i])
+    for i in range(len(y_data_list)):
+        if len(x_data_list) == 1:
+            b = 0
+        else :
+            b= i
+        plt.plot(x_data_list[b], y_data_list[i], label=list_labels[i], linestyle=list_linestyles[i])
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -358,9 +362,12 @@ def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, xlabel
     
     if legend:
         plt.legend()
-        
-    # plt.savefig(nom_enregistrement,dpi=300)
+    
+    if savename != '':
+        path = "Images/" + savename+".png"
+        plt.savefig(path,dpi=300)    
     
     plt.show()
+
 
 
