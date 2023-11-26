@@ -41,10 +41,11 @@ Z = [0,prm.zb+prm.zg]
 
 nx = 2
 nz = 5
-dt = 60
+dt = 30
 tf = 5400
 
 a = plt.figure(1)
+
 
 temperature_glace = mdf_1D(Z,nz,prm,dt,tf)
 #temperature_glace_permanent = mdf_permanent(X,Z,nx,nz,prm,dt,tf)
