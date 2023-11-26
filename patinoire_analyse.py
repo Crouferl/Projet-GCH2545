@@ -31,11 +31,20 @@ class parametre():
 prm = parametre()
 tf = 5400
 dt = 60
+X = [-1,1]
+Z = [0,prm.zb+prm.zg]
+
+nx = 2
+nz = 5
+dt = 60
+tf = 5400
 #-----------------------------------------------------------------------------
 
 #Identifier pas adéquat de simulation (temporel et physique)
 
 
+
+temperature_glace = mdf_1D(Z,nz,prm,dt,tf)
 
 
 
@@ -57,11 +66,12 @@ for i in range(len(temps)):
     
 temperature = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ] 
 
+
 plot = fonction_plot([x,temps],[y , temperature], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid","dashed"], 
-                     xlabel='Temps (s)', 
-                     ylabel='Temperature (°C)', 
-                     title="Valeurs de température d'air interpolées et spécifiées", 
-                     savename="lagrange")
+                      xlabel='Temps (s)', 
+                      ylabel='Temperature (°C)', 
+                      title="Valeurs de température d'air interpolées et spécifiées", 
+                      savename="lagrange")
  
 
 
@@ -71,6 +81,7 @@ temperature_liquide = temperature_liquide(points_temps_sec)
 temperature_air = np.zeros(len(points_temps_sec))
 for i,t in enumerate(points_temps_sec):
     temperature_air[i] = interpolation_Tair(t)
+
 
 points_temps_min = np.arange(0,tf+60,dt,dtype="float")/60
 fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1]], ["Air","Glycol"],["solid","dashed"], 
@@ -84,6 +95,32 @@ fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1]], ["
 
 #Profil de température après 90min (identifier limite entre glace et béton et surface de glace)
 
+Z_pos = mesh_1D(Z, nz)
+
+fonction_plot([Z_pos],[temperature_glace[1][:,-1]],["Temperature"],["solid"],
+         xlabel = "Position [m]",
+         ylabel = "Température [C°]",
+         title = "Profil de température dans la glace et le béton après 90min",
+         xlines=[0.10,0.15],
+         savename = "profile_temp") 
+
+fonction_plot([temperature_glace[0]],[temperature_glace[1][1,:]],["Temperature"],["solid"],
+         xlabel = "Temps [sec]",
+         ylabel = "Température [C°]",
+         title = "Évolution de la température selon le temps",
+         xlines=[14*90],
+         savename = "Temp")    
 
 
-pytest.main(['-q', '--tb=long', 'patinoire_corr.py'])
+#-----------------------------------------------------------------------------
+#Évolution de la température de la glace avec différentes épaisseurs
+
+
+
+
+
+
+
+
+
+#pytest.main(['-q', '--tb=long', 'patinoire_corr.py'])
