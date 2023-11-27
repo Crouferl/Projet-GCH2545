@@ -212,7 +212,7 @@ def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, list_m
         plt.grid()
     
     if legend:
-        plt.legend()
+        plt.legend(loc="lower right")
     
     if savename != '':
         path = "Images/" + savename+".png"
@@ -243,7 +243,7 @@ def mdf_1D_transitoire(Z_limit,nz,prm,dt,tf) :
     
     #Pas de discrétisation du domaine physique
     dz = abs((Z_limit[1]-Z_limit[0])/(nz-1))
-    
+    print(dz)
     ci = np.ones(nz)*prm.Ti
 
     points_temps = np.arange(0,tf+dt,dt,dtype="float")
@@ -414,5 +414,10 @@ def mesh_1D(Z,nz):
         zr = zr - dz #Ajoute la valeur du pas à la valeur de la ligne précédente
         z[i]=zr #Ajoute la nouvelle valeur à la ligne i
     return z
+
+def nombre_de_points(n):
+    point = 1 + n//3 * 3
+    return point
+    
 
 

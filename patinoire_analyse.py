@@ -32,8 +32,8 @@ prm = parametre()
 tf = 5400
 Z = [0,prm.zb+prm.zg]
 nx = 2
-nz = 10
-dt = 60
+nz = nombre_de_points(28)
+dt = 120
 tf = 5400
 
 temperature_glace_experimental = np.array([-1.00,-6.35,-5.85,-5.50,-3.60,-3.25],dtype=float)
@@ -41,7 +41,6 @@ temps_temperature_experimental = t_test = np.array([0,2,7,15,45,90],dtype=int)
 #-----------------------------------------------------------------------------
 
 #Identifier pas adéquat de simulation (temporel et physique)
-
 
 
 temperature_glace = mdf_1D_transitoire(Z,nz,prm,dt,tf)
@@ -67,17 +66,17 @@ for i in range(len(temps)):
     
 temperature_air = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ] 
 
-fonction_plot([x,temps],[y , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid"," "],["","o"], 
-                      xlabel='Temps (s)', 
-                      ylabel='Temperature (°C)', 
-                      title="Valeurs de température d'air interpolées et spécifiées", 
-                      savename="lagrange")
+# fonction_plot([x,temps],[y , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid"," "],["","o"], 
+#                       xlabel='Temps (s)', 
+#                       ylabel='Temperature (°C)', 
+#                       title="Valeurs de température d'air interpolées et spécifiées", 
+#                       savename="lagrange")
 
-fonction_plot([x,temps],[interpoler(temps,temperature_air,x) , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid"," "],["","o"], 
-                      xlabel='Temps (s)', 
-                      ylabel='Temperature (°C)', 
-                      title="Valeurs interpolées par un polynôme de degré 5", 
-                      savename="lagrange_deg5")
+# fonction_plot([x,temps],[interpoler(temps,temperature_air,x) , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid"," "],["","o"], 
+#                       xlabel='Temps (s)', 
+#                       ylabel='Temperature (°C)', 
+#                       title="Valeurs interpolées par un polynôme de degré 5", 
+#                       savename="lagrange_deg5")
  
 
 
@@ -90,10 +89,10 @@ for i,t in enumerate(points_temps_sec):
 
 
 points_temps_min = np.arange(0,tf+dt,dt,dtype="float")/60
-fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1]], ["Air","Glycol"],["solid","dashed"], ["",""], 
+fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1],temperature_glace[1][-1,:]], ["Air","Glycol","Glace"],["solid","dashed","solid"], ["","",""], 
               xlabel="Temps [min]",
               ylabel="Température [C°]",
-              title="Évolution de la température de l'air et du glycol",
+              title="Évolution de la température de l'air, du glycol et de la glace",
               savename="temp_glycol_air")
 
 
