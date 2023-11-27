@@ -68,7 +68,7 @@ for i in range(len(temps)):
 temperature_air = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ] 
 
 
-fonction_plot([x,temps],[y , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid","dashed"], 
+fonction_plot([x,temps],[y , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid"," "],["","o"], 
                       xlabel='Temps (s)', 
                       ylabel='Temperature (°C)', 
                       title="Valeurs de température d'air interpolées et spécifiées", 
@@ -85,7 +85,7 @@ for i,t in enumerate(points_temps_sec):
 
 
 points_temps_min = np.arange(0,tf+dt,dt,dtype="float")/60
-fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1]], ["Air","Glycol"],["solid","dashed"], 
+fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1]], ["Air","Glycol"],["solid","dashed"], ["",""], 
               xlabel="Temps [min]",
               ylabel="Température [C°]",
               title="Évolution de la température de l'air et du glycol",
@@ -98,14 +98,14 @@ fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1]], ["
 
 Z_pos = np.flip(mesh_1D(Z, nz))
 
-fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1][:,-1]],["Transitoire","Permanent"],["solid","dashed"],
+fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1][:,-1]],["Transitoire","Permanent"],["solid","dashed"],["",""],
          xlabel = "Position [m]",
          ylabel = "Température [C°]",
          title = "Profil de température dans la glace et le béton après 90min",
          xlines=[0.05,0.15],
          savename = "profile_temp") 
 
-fonction_plot([points_temps_min,temps_temperature_experimental],[temperature_glace[1][-1,:],temperature_glace_experimental],["MDF","Expérimental"],["solid","dashed"],
+fonction_plot([points_temps_min,temps_temperature_experimental],[temperature_glace[1][-1,:],temperature_glace_experimental],["MDF","Expérimental"],["solid","dashed"],["",""],
          xlabel = "Temps [sec]",
          ylabel = "Température [C°]",
          title = "Évolution de la température à la surface de la glace selon le temps",

@@ -176,7 +176,7 @@ def interpoler(x,y,x_interpo):
     return y_interpo
 
 
-def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles,savename='', xlabel='', ylabel='', title='',xlines='', grid=True, legend=True):
+def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, list_marker, savename='', xlabel='', ylabel='', title='',xlines='', grid=True, legend=True):
     """fonction permettant de tracer une ou plusieurs courbes.
     
     Entrées:
@@ -197,7 +197,7 @@ def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles,savenam
             b = 0
         else :
             b= i
-        plt.plot(x_data_list[b], y_data_list[i], label=list_labels[i], linestyle=list_linestyles[i])
+        plt.plot(x_data_list[b], y_data_list[i], label=list_labels[i], linestyle=list_linestyles[i], marker = list_marker[i])
         
         
     if xlines:
