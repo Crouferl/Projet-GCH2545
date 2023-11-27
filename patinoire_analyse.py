@@ -67,12 +67,17 @@ for i in range(len(temps)):
     
 temperature_air = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ] 
 
-
 fonction_plot([x,temps],[y , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid"," "],["","o"], 
                       xlabel='Temps (s)', 
                       ylabel='Temperature (°C)', 
                       title="Valeurs de température d'air interpolées et spécifiées", 
                       savename="lagrange")
+
+fonction_plot([x,temps],[interpoler(temps,temperature_air,x) , temperature_air], ["Valeurs d'interpolation","Valeurs spécifiées"],["solid"," "],["","o"], 
+                      xlabel='Temps (s)', 
+                      ylabel='Temperature (°C)', 
+                      title="Valeurs interpolées par un polynôme de degré 5", 
+                      savename="lagrange_deg5")
  
 
 
