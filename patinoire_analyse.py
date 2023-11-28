@@ -29,11 +29,11 @@ class parametre():
     Ti = -1 #[°C]
 
 prm = parametre()
-tf = 5400
+tf = 2000
 Z = [0,prm.zb+prm.zg]
 nx = 2
 nz = nombre_de_points(28)
-dt = 120
+dt = 60
 tf = 5400
 
 temperature_glace_experimental = np.array([-1.00,-6.35,-5.85,-5.50,-3.60,-3.25],dtype=float)
@@ -100,7 +100,7 @@ fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1],temp
 
 #Profil de température après 90min (identifier limite entre glace et béton et surface de glace)
 
-Z_pos = np.flip(mesh_1D(Z, nz))
+Z_pos = mesh_1D(Z, nz)
 
 fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1][:,-1]],["Transitoire","Permanent"],["solid","dashed"],["",""],
          xlabel = "Position [m]",

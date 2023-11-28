@@ -26,7 +26,7 @@ prm = parametre()
 class Test:
 
     def test_mdf_transitoire(self):
-        Z = [0,prm.zb+prm.zg]
+        Z = [0,round(prm.zb+prm.zg,5)]
         nz = 10
         dt = 60
         tf = 5400
@@ -44,7 +44,7 @@ class Test:
         assert (all(err_mdf < 2))
     
     def test_mdf_permanent(self):
-        Z = [0,prm.zb+prm.zg]
+        Z = [0,round(prm.zb+prm.zg,5)]
         nz = 10
         dt = 60
         tf = 5400

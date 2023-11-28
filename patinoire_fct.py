@@ -239,11 +239,10 @@ def mdf_1D_transitoire(Z_limit,nz,prm,dt,tf) :
             - [[température Temps 0],[Températeur Temp 1].....]
         
     """
-    Z_pos = np.flip(mesh_1D(Z_limit,nz)) #Créer les matrices des positions pour les deux dimensions
-    
+    Z_pos = mesh_1D(Z_limit,nz) #Créer les matrices des positions pour les deux dimensions
+    Z_limit = np.round(Z_limit,5)
     #Pas de discrétisation du domaine physique
     dz = abs((Z_limit[1]-Z_limit[0])/(nz-1))
-    print(dz)
     ci = np.ones(nz)*prm.Ti
 
     points_temps = np.arange(0,tf+dt,dt,dtype="float")
@@ -275,7 +274,7 @@ def mdf_1D_transitoire(Z_limit,nz,prm,dt,tf) :
                 A[k,k] = 3/(2*dz) + prm.h_air/prm.k_g
                 B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g 
                 
-            elif round(Z,2) == prm.zb : #Vérifier si le point est sur la frontière 
+            elif abs(Z-prm.zb) <1e-3 : #Vérifier si le point est sur la frontière 
                 A[k,k+2] =-prm.k_g
                 A[k,k+1] = 4*prm.k_g
                 A[k,k] = -3*(prm.k_g+prm.k_b)
@@ -320,8 +319,8 @@ def mdf_1D_permanent(Z_limit,nz,prm,dt,tf) :
             - [[température Temps 0],[Températeur Temp 1].....]
         
     """
-    Z_pos = np.flip(mesh_1D(Z_limit,nz)) #Créer les matrices des positions pour les deux dimensions
-    
+    Z_pos = mesh_1D(Z_limit,nz) #Créer les matrices des positions pour les deux dimensions
+    Z_limit = np.round(Z_limit,5)
     #Pas de discrétisation du domaine physique
     dz = abs((Z_limit[1]-Z_limit[0])/(nz-1))
     
@@ -357,7 +356,7 @@ def mdf_1D_permanent(Z_limit,nz,prm,dt,tf) :
                 A[k,k] = 3/(2*dz) + prm.h_air/prm.k_g
                 B[k] = (prm.h_air*T_air)/prm.k_g 
                 
-            elif round(Z,2) == prm.zb : #Vérifier si le point est sur la frontière 
+            elif abs(Z-prm.zb) <1e-3 : #Vérifier si le point est sur la frontière 
                 A[k,k+2] =-prm.k_g
                 A[k,k+1] = 4*prm.k_g
                 A[k,k] = -3*(prm.k_g+prm.k_b)
@@ -413,11 +412,28 @@ def mesh_1D(Z,nz):
     for i in range(1  , nz-1): #On saute les première et dernière valeurs qui ont déjà été obtenues plus haut
         zr = zr - dz #Ajoute la valeur du pas à la valeur de la ligne précédente
         z[i]=zr #Ajoute la nouvelle valeur à la ligne i
+    z = np.flip(np.round(z,5))
     return z
 
 def nombre_de_points(n):
     point = 1 + n//3 * 3
     return point
     
+
+def temperature_sans_echec(Z_limit,nz,prm,dt,tf) :
+    
+    Z = mesh_1D(Z_limit,nz)
+
+    while prm.zb not in Z and nz<200 :
+        nz +=1 
+        Z = mesh_1D(Z_limit,nz)
+        
+    
+        
+    temp = mdf_1D_transitoire(Z_limit, nz, prm, dt, tf)
+    return temp[1][-1,-1]
+    
+
+        
 
 
