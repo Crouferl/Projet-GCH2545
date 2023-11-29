@@ -9,10 +9,9 @@ Created on Mon Nov 27 14:38:00 2023
 import numpy as np
 import matplotlib.pyplot as plt
 import pytest
-try:
-    from patinoire_fct import *
-except:
-    pass
+
+from patinoire_fct import *
+
 
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
@@ -30,10 +29,66 @@ class parametre():
     h_air = 5 #[Wm−2 K−1]
     Ti = -1 #[°C]
 
+
+
+
 prm = parametre()
+nz = nombre_de_points(4)
+dt = 60
+tf = 5400
+Z = [0,prm.zb+prm.zg]
+
+T = np.array([-1.00,-5.50,-3.25],dtype=float)
+t_test = np.array([0,15,90],dtype=int)
+
+err = np.ones(3)
+err_plot = np.zeros((26,4))
+tol=0.2
+    
+    
+for j in range(4,30):
+    temp_to_test = mdf_1D_transitoire(Z, nz, prm, dt, tf)
+    for i in range(0,3):
+        err[i] = temp_to_test[1][-1,t_test[i]]
+        
+    err = abs(err-T)
+    nz = nombre_de_points(j)
+    err_plot[j-4, :] = [nz,err[0],err[1],err[2]]
+    
+    # if any([err[0]>=tol,err[1]>=tol,err[2]>=tol]) :
+    #     print(nz)
+    #     n=nz
+
+
+    
+fig = plt.figure()
+
+ax = fig.add_subplot(1, 1, 1)
+
+
+plt.plot(err_plot[1:-3,0],err_plot[1:-3,1])
+plt.plot(err_plot[1:-3,0],err_plot[1:-3,2])
+plt.plot(err_plot[1:-3,0],err_plot[1:-3:,3])
+
+ax.set_xlabel = "Nombre de points"
+ax.set_ylabel = "Erreur"
+tick = np.arange(2, 25,2)
+ax.set_yscale('log')
+ax.set_xticks(tick)
+ax.grid(True)
+
+
+#%%
+
+
+
+
 nz = nombre_de_points(30)
 dt = 60
 tf = 5400
+
+
+
 
 
 import numpy as np

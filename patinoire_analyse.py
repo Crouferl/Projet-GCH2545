@@ -43,6 +43,10 @@ temps_temperature_experimental = t_test = np.array([0,2,7,15,45,90],dtype=int)
 #Identifier pas adéquat de simulation (temporel et physique)
 
 
+
+
+
+
 temperature_glace = mdf_1D_transitoire(Z,nz,prm,dt,tf)
 temperature_glace_permanent = mdf_1D_permanent(Z,nz,prm,dt,tf)
 
