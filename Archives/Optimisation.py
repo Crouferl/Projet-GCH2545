@@ -37,29 +37,9 @@ nz = nombre_de_points(4)
 dt = 60
 tf = 5400
 Z = [0,prm.zb+prm.zg]
-
-T = np.array([-1.00,-5.50,-3.25],dtype=float)
-t_test = np.array([0,15,90],dtype=int)
-
-err = np.ones(3)
-err_plot = np.zeros((26,4))
-tol=0.2
-    
-    
-for j in range(4,30):
-    temp_to_test = mdf_1D_transitoire(Z, nz, prm, dt, tf)
-    for i in range(0,3):
-        err[i] = temp_to_test[1][-1,t_test[i]]
         
-    err = abs(err-T)
-    nz = nombre_de_points(j)
-    err_plot[j-4, :] = [nz,err[0],err[1],err[2]]
-    
-    # if any([err[0]>=tol,err[1]>=tol,err[2]>=tol]) :
-    #     print(nz)
-    #     n=nz
-
-
+n,n_data = trouver_nombre_points(4, dt, tf, Z, prm, 0.5, 30)
+#%%
     
 fig = plt.figure()
 
@@ -83,27 +63,23 @@ ax.grid(True)
 
 
 
-nz = nombre_de_points(30)
+nz = nombre_de_points(20)
 dt = 60
 tf = 5400
 
-
-
-
-
 import numpy as np
 
-epaisseur_glace = np.arange(0.04,0.3,0.01)#[m]
-epaisseur_beton = np.arange(0.1,0.5,0.01) #[m]
+epaisseur_glace = np.arange(0.04,0.3,0.02)#[m]
+epaisseur_beton = np.arange(0.04,0.3,0.02) #[m]
 epaisseur_data = np.zeros((len(epaisseur_beton)*len(epaisseur_glace),3))
 k = 0
 
 for i,z_g in enumerate(epaisseur_glace) :
-    prm.zg = z_g
-    print("i: " + str(i))
+    prm.zg = round(z_g,5)
+    # print("i: " + str(i))
     for j,z_b in enumerate(epaisseur_beton):
-        print("j: " + str(j))
-        prm.zb = z_b 
+        # print("j: " + str(j))
+        prm.zb = round(z_b,5) 
         Z = [0,prm.zb+prm.zg]
         t_glace = temperature_sans_echec(Z, nz, prm, dt, tf)
         epaisseur_data[k,:] = [prm.zg,prm.zb,t_glace]
@@ -133,18 +109,10 @@ fig.colorbar(surf, shrink=0.1, aspect=10)
 ax.set_xlabel('Épaisseur glace')
 ax.set_ylabel('Épaisseur béton')
 ax.set_zlabel('Température')
-ax.view_init(azim=120, elev=20)
+ax.view_init(azim=175, elev=30)
 
 
 # plt.savefig("test", dpi=300)
-
-
-plt.fig()
-
-plt.plot(epaisseur_data[:,1],epaisseur_data[:,2])
-plt.plot(epaisseur_data[:,0],epaisseur_data[:,2])
-
-
 
 plt.show()
 

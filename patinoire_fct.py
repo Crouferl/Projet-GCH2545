@@ -1,12 +1,11 @@
+#Auteurs 
+#Nicolas Guillemette (2081046)
+#Raphael Louis-Seize (2144924)
+#Léo Croufer (2001374)
+
 #Importation des modules 
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-
-# Optimiser nombre de points (Optionnel)
-    #Input : erreur voulue
-    #Out : Nombre de points en x et en y
 
 
 def temperature_liquide(t) :
@@ -41,86 +40,6 @@ def temperature_liquide(t) :
     return temp_liquide
 
 
-def mdf_2D(X_limit,Z_limit,nx,nz,prm,dt,tf) :
-    
-    """Fonction qui résoud le problème de différence fini et calcule la position pour chaque point pour chaque pas de temps
-    Entrées:
-        - X : Bornes du domaine en x, X = [x_min, x_max]
-        - Z : Bornes du domaine en z, Z = [z_min, z_max]
-        - nx : Discrétisation de l'espace en x (nombre de points)
-        - nz : Discrétisation de l'espace en z (nombre de points)
-        - prm : objet contenant tous les paramètres physiques du problème
-        - dt : pas de temps 
-        - tf : temps final
-
-    Sortie (dans l'ordre énuméré ci-bas):
-        - points_temps : Array contenants les points de temps où la température a été calculée
-        - temperature_store : Array contenant la température pour chaque point à chaque point de temps 
-            - [[température Temps 0],[Températeur Temp 1].....]
-        
-    """
-    X_pos, Z_pos = mesh(X_limit,Z_limit,nx,nz) #Créer les matrices des positions pour les deux dimensions
-    points = numeroter_mesh(X_pos,Z_pos) #Créer la matrices avec les positions et les adresses de chaque points
-    n_points = nx*nz #Nombre de points dans la discrétisation
-
-    #Pas de discrétisation du domaine physique
-    dx = abs((X_limit[1]-X_limit[0])/(nx-1))
-    dz = abs((Z_limit[1]-Z_limit[0])/(nz-1))
-    
-    ci = np.ones(n_points)*prm.Ti
-
-    points_temps = np.arange(0,tf+60,dt,dtype="float")
-    temperature_store = np.zeros((n_points,len(points_temps))) #Matrice pour enregister les résulats finals
-    temp = np.zeros(n_points) #Matrice temporaire pour stocker le résultat de chaque itération
-    
-    t_L = temperature_liquide(points_temps)
-
-    for i,t in enumerate(points_temps) : #Boucle pour itérer sur chaque point de temps
-
-        #Initialiser les matrices de différence finie
-        A = np.zeros((n_points,n_points))
-        B = np.zeros(n_points)
-        
-        for k in range(0,n_points) : #Boucle pour itérer sur l'espace
-            X = points[k,0]
-            Z = points[k,1]
-            
-
-            if Z == Z_limit[0] : #Vérifier si le point est sur la limite inférieure
-                   
-                A[k,k+2] = -1/(2*dz)
-                A[k,k+1] = 4/(2*dz)
-                A[k,k] = -3/(2*dz) - (prm.h_l/prm.k_b) 
-                B[k] = -(prm.h_l*t_L[i,1])/(prm.k_b)
-            
-            elif Z == Z_limit[1] : #Vérifier si le point est sur la limite supérieure
-                A[k,k-2] = 1/(2*dz)
-                A[k,k-1] = (-4)/(2*dz)
-                A[k,k] = 3/(2*dz) + prm.h_air/prm.k_g
-                B[k] = (prm.h_air*interpolation_Tair(t))/prm.k_g 
-                
-                
-            else : #Remplir le coeur de la matrice
-                
-                if Z < prm.zb : #Vérifier si le point est dans la glace ou dans le béton
-                    alpha = prm.alpha_b #
-                else : 
-                    alpha = prm.alpha_g
-                    
-                A[k,k+1] = -(alpha*dt)/(dz**2)
-                A[k,k] = 1 +(2*alpha*dt)/(dz**2)
-                A[k,k-1] = -(alpha*dt)/(dz**2)
-                B[k] = ci[k]
-                
-        temp = np.linalg.solve(A,B) 
-
-        ci = temp.copy() 
-
-        temperature_store[:,i] = temp 
-
-    return points_temps, temperature_store 
-
-
 
 def interpolation_Tair(temps_interpo):
     """ Fonction qui permet d'interpoler la température de l'air en fonction du temps
@@ -136,6 +55,9 @@ def interpolation_Tair(temps_interpo):
 
     temperature = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ] #Valeurs de température spécifiées dans la question
 
+    if temps_interpo > temps[-1] :
+        return 14
+    
     n = len(temps)
     omega = 0
     for i in range(n):
@@ -148,9 +70,7 @@ def interpolation_Tair(temps_interpo):
     return interpoler([temps[omega],temps[omega+1]],[temperature[omega],temperature[omega+1]],temps_interpo)
 
     
-    
 
-"Si nécessaire (On l'effacera sinon)."
 def interpoler(x,y,x_interpo):
     """ Fonction qui permet d'interpoler la température de l'air en fonction du temps
 
@@ -176,7 +96,7 @@ def interpoler(x,y,x_interpo):
     return y_interpo
 
 
-def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, list_marker, savename='', xlabel='', ylabel='', title='',xlines='', grid=True, legend=True):
+def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, list_marker, savename='', xlabel='', ylabel='', title='',xlines='', log='',tick='', grid=True, legend=True):
     """fonction permettant de tracer une ou plusieurs courbes.
     
     Entrées:
@@ -191,7 +111,8 @@ def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, list_m
     Sorties
         - graphique de une ou plusieurs courbes
     """
-    plt.figure()
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
     for i in range(len(y_data_list)):
         if len(x_data_list) == 1:
             b = 0
@@ -214,10 +135,16 @@ def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, list_m
     if legend:
         plt.legend(loc="lower right")
     
+    
+    if log:
+        ax.set_yscale('log')
+    
+    if len(tick) != 0:
+        ax.set_xticks(tick)
+
     if savename != '':
         path = "Images/" + savename+".png"
         plt.savefig(path,dpi=300) 
-    
 
     plt.show()
 
@@ -304,6 +231,7 @@ def mdf_1D_transitoire(Z_limit,nz,prm,dt,tf) :
 
 
 def mdf_1D_permanent(Z_limit,nz,prm,dt,tf) :
+    
     
     """Fonction qui résoud le problème de différence fini et calcule la position pour chaque point pour chaque pas de temps
     Entrées:
@@ -415,12 +343,35 @@ def mesh_1D(Z,nz):
     z = np.flip(np.round(z,5))
     return z
 
+
 def nombre_de_points(n):
+    """ Qui asssure que le nombre de point choisi place un point sur la frontière (cas où la proportion 
+    glace:béton est 1:2)
+    Entrées: 
+        - n : nombre de points voulu
+
+    Sorties (dans l'ordre énuméré ci-bas):
+        - z : nombre de point qui assure un point sur la frontière
+
+    """
+    
     point = 1 + n//3 * 3
     return point
     
 
 def temperature_sans_echec(Z_limit,nz,prm,dt,tf) :
+    """Fonction qui permet l'utilisation de la MDF peu importe la proportion glace béton en utilisant
+    un nombre de point dynamique.
+    Entrées :
+        - Z : Bornes du domaine en z, Z = [z_min, z_max]
+        - nx : Discrétisation de l'espace en x (nombre de points)
+        - nz : Discrétisation de l'espace en z (nombre de points)
+        - prm : objet contenant tous les paramètres physiques du problème
+        - dt : pas de temps 
+        - tf : temps final
+    Sorties
+        -temp[1][-1,-1] : Temperature à la surface après 90min
+    """
     
     Z = mesh_1D(Z_limit,nz)
 
@@ -428,12 +379,47 @@ def temperature_sans_echec(Z_limit,nz,prm,dt,tf) :
         nz +=1 
         Z = mesh_1D(Z_limit,nz)
         
-    
+    #print(nz)
         
     temp = mdf_1D_transitoire(Z_limit, nz, prm, dt, tf)
     return temp[1][-1,-1]
     
 
-        
+def trouver_nombre_points(n_start,dt,tf,Z,prm,tol,limit_points):
+    """Fonction qui retourne le nombre de points minimum pour avoir une erreur minimum
+    Entrées :
+        - Z_limit : Bornes du domaine en z, Z = [z_min, z_max]
+        - nz : Discrétisation de l'espace en z (nombre de points)
+        - prm : objet contenant tous les paramètres physiques du problème
+        - dt : pas de temps 
+        - tf : temps final
+        - tol : tolerence à l'erreur
+        - limit points: nombre de points max à tester
+    Sorties
+         - n : nombre de point à utiliser
+         - err_plot : évolution de l'erreur en fonction du nombre de points 
+    """
+    T = np.array([-1.00,-5.50,-3.25],dtype=float)
+    t_test = np.array([0,15,90],dtype=int)
+    
+    tol=0.8
+    nz = n_start
+    err = np.ones(3)
+    err_plot = np.zeros((limit_points-n_start,4))
+    nz_foud = False
 
+    for j in range(n_start,limit_points):
+        temp_to_test = mdf_1D_transitoire(Z, nz, prm, dt, tf)
+        for i in range(0,3):
+            err[i] = temp_to_test[1][-1,t_test[i]]
+            
+        err = abs(err-T)
+        nz = nombre_de_points(j)
+        err_plot[j-n_start, :] = [nz,err[0],err[1],err[2]]
+        
+        if any([err[0]<=tol,err[1]<=tol,err[2]<=tol]) and not nz_foud :
+            n=nz
+            nz_foud = True
+            
+    return n,err_plot
 
