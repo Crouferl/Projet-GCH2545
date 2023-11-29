@@ -79,11 +79,15 @@ temperature_air = [-1, 3.81 , 7.07 , 9.06 , 11.92 , 13.73 ]
 #                       savename="lagrange_deg5")
  
 
+# Vérification température glace à la surface
+temperature_verification = [-1,-6.35,-5.50,-3.25]
+temps_verification = [0,2,15,90]
 
 #Comparaison Air et liquide
 points_temps_sec = np.arange(0,tf+dt,dt,dtype="float")
 temperature_liquide = temperature_liquide(points_temps_sec)
 temperature_air = np.zeros(len(points_temps_sec))
+
 for i,t in enumerate(points_temps_sec):
     temperature_air[i] = interpolation_Tair(t)
 
@@ -94,6 +98,36 @@ fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1],temp
               ylabel="Température [C°]",
               title="Évolution de la température de l'air, du glycol et de la glace",
               savename="temp_glycol_air")
+
+#-----------------------------------------------------------------------------
+
+# Comparaison MDF transitoire et permanent après 90 min (Graphiques de type color maps)
+
+z = mesh_1D(Z, nz)
+x_mesh=x = np.linspace(0, 1, nx)
+
+temp_reshaped = temperature_glace[1][:, 1].reshape(nz).transpose()
+temp_reshaped_permanent = temperature_glace_permanent[1][:, 1].reshape(nz).transpose()
+
+tick = np.linspace(1, 2, 11)
+
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 16))
+
+fig1 = ax[0].pcolormesh(x_mesh, z, temp_reshaped, cmap="coolwarm")
+fig2 = ax[1].pcolormesh(x_mesh, z, temp_reshaped_permanent, cmap="coolwarm")
+ax[0].set_title('MDF transitoire')
+ax[1].set_title('MDF regime permanent')
+
+plt.colorbar(fig1, ax=ax[1], label="Température")
+
+plt.suptitle("Distribution de la température de la patinoire à 90 minutes", fontsize=16)
+
+ax[0].set_xlabel("Axe x [m]", fontsize=12)
+ax[1].set_xlabel("Axe x [m]", fontsize=12)
+ax[0].set_ylabel("Hauteur z [m]", fontsize=12)
+
+plt.show()
+
 
 
 #-----------------------------------------------------------------------------
@@ -110,11 +144,24 @@ fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1]
          savename = "profile_temp") 
 
 fonction_plot([points_temps_min,temps_temperature_experimental],[temperature_glace[1][-1,:],temperature_glace_experimental],["MDF","Expérimental"],["solid","dashed"],["",""],
-         xlabel = "Temps [sec]",
+         xlabel = "Temps [min]",
          ylabel = "Température [C°]",
          title = "Évolution de la température à la surface de la glace selon le temps",
          xlines=[14],
          savename = "évolution_temp")    
+
+
+
+#-----------------------------------------------------------------------------
+
+#Profil de température pour la vérification (Études des 4 température clées)
+
+fonction_plot([points_temps_min, temps_temperature_experimental, temps_verification],[temperature_glace[1][-1,:], temperature_glace_experimental, temperature_verification],["Température par simulation", "Températures expérimentales", "Points d'analyse"],["solid", "dashed", " "],["","","o"],
+         xlabel = "Temps minutes [m]",
+         ylabel = "Température [C°]",
+         title = "Vérifiaction du profil de température à la glace obtenue par simulation",
+         xlines=None,
+         savename = "verification_Tglace") 
 
 
 #-----------------------------------------------------------------------------
