@@ -412,7 +412,7 @@ def trouver_nombre_points(n_start,dt,tf,Z,prm,tol,limit_points):
         
     Sorties
          - n : nombre de point à utiliser
-         - err_plot : évolution de l'erreur en fonction du nombre de points 
+         - err_plot : évolution de l'erreur en fonction du nombre de points [nombre de points,erreur @ 0min,erreur @15min, erreur @90min]
     """
     T = np.array([-1.00,-5.50,-3.25],dtype=float)
     t_test = np.array([0,15,90],dtype=int)
