@@ -7,7 +7,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+#Fonctions
 def temperature_liquide(t) :
     
     """Fonction qui retourne un array de la température du liquide en fonction du temps
@@ -42,7 +42,7 @@ def temperature_liquide(t) :
 
 
 def interpolation_Tair(temps_interpo):
-    """ Fonction qui permet d'interpoler la température de l'air en fonction du temps
+    """ Fonction qui permet d'interpoler la température de l'air  du système à un certain temps
 
     Entrées:
         - temps_interpo : Temps auquel on cherche la Température
@@ -97,20 +97,32 @@ def interpoler(x,y,x_interpo):
 
 
 def fonction_plot(x_data_list, y_data_list, list_labels, list_linestyles, list_marker, savename='', xlabel='', ylabel='', title='',xlines='', log='',tick='', grid=True, legend=True):
-    """fonction permettant de tracer une ou plusieurs courbes.
+    """fonction permettant de tracer une ou plusieurs courbes sur un graphique
     
     Entrées:
         - vecteur_x : vecteur de données pour l'abscice'
         - vecteur_y : vecteur de données pour l'ordonné
-        - list_label : liste de label pour les courbes
-        - x_label : Titre abscise (string)
-        - y_label : Titre ordonné (string)
-        - title : Tire du graphique (string)
+
         
+        - x_data_list : Valeurs en x de chaque courbe sous forme de liste (ex: [[liste des valeurs de x courbe 1],[liste des valeurs de x courbe 2]])
+        - y_data_list : Valeurs en y de chaque courbe sous forme de liste (ex: [[liste des valeurs de y courbe 1],[liste des valeurs de y courbe 2]])
+        - list_labels : liste de label pour les courbes
+        - list_linestyles : Liste permettant de choisir le type de ligne (ex: ["solid","dashed"] donnera une première courbe avec une ligne pleine et une deuxième courve en traits discontinus)
+        - list_marker : Liste permettant de choisir comment présenter les points de données (ex: ["","o"] donnera une première courbe avec aucun marqueur et une deuxième courbe avec des points comme marqueurs)
+        - savename : Nom du fichier à enregistrer (ex: savename = "profile_temp_30")
+        - xlabel : Titre abscise (string)
+        - ylabel : Titre ordonné (string)
+        - title : Tire du graphique (string)
+        - xlines : Tracer une ligne pointillée verticale (ex: [0.05,0.15] tracera une ligne verticale en x = 0.05 et en x=0.15)
+        - log : log = True permet d'obtenir un axe y logarithmique
+        - tick : Permet d'ajouter d'ajouter des ticks (ex: tick= np.arange(3, 25,1) ajoutera des ticks à chaque valeur entière de 3 à 25)
+        - grid : grid = true permet d'ajouter un grid au graphique
+        - legend : legend = true permet d'ajouter une legende au graphique en fonction des de list_labels
         
     Sorties
         - graphique de une ou plusieurs courbes
     """
+    
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     for i in range(len(y_data_list)):
@@ -153,8 +165,7 @@ def mdf_1D_transitoire(Z_limit,nz,prm,dt,tf) :
     
     """Fonction qui résoud le problème de différence fini et calcule la position pour chaque point pour chaque pas de temps
     Entrées:
-        - Z : Bornes du domaine en z, Z = [z_min, z_max]
-        - nx : Discrétisation de l'espace en x (nombre de points)
+        - Z_limit : Bornes du domaine en z, Z_limit = [z_min, z_max]
         - nz : Discrétisation de l'espace en z (nombre de points)
         - prm : objet contenant tous les paramètres physiques du problème
         - dt : pas de temps 
@@ -235,7 +246,7 @@ def mdf_1D_permanent(Z_limit,nz,prm,dt,tf) :
     
     """Fonction qui résoud le problème de différence fini et calcule la position pour chaque point pour chaque pas de temps
     Entrées:
-        - Z : Bornes du domaine en z, Z = [z_min, z_max]
+        - Z_limit : Bornes du domaine en z, Z_limit = [z_min, z_max]
         - nz : Discrétisation de l'espace en z (nombre de points)
         - prm : objet contenant tous les paramètres physiques du problème
         - dt : pas de temps 
@@ -320,13 +331,14 @@ def mesh_1D(Z,nz):
         - nz : Discrétisation de l'espace en z (nombre de points)
 
     Sorties (dans l'ordre énuméré ci-bas):
-        - z : Matrice (array) de dimension (nz x nx) qui contient la position en z
+        - z : Matrice (array) de dimension (nz) qui contient la position en z
             * Exemple d'une matrice position :
             * Si  et Z = [0, 1]
-            * Avec et nz = 3
+            * Avec nz = 3
             
-                z = []
+                z = [0 0.5 1]
     """
+    
     z = np.zeros(nz) #Création de la matrice de position en z selon les dimensions contraintes par la discrétisation de l'espace
     
     
@@ -348,10 +360,10 @@ def nombre_de_points(n):
     """ Qui asssure que le nombre de point choisi place un point sur la frontière (cas où la proportion 
     glace:béton est 1:2)
     Entrées: 
-        - n : nombre de points voulu
+        - n : nombre de points voulus
 
     Sorties (dans l'ordre énuméré ci-bas):
-        - z : nombre de point qui assure un point sur la frontière
+        - z : nombre de points qui assure un point sur la frontière
 
     """
     
@@ -361,14 +373,15 @@ def nombre_de_points(n):
 
 def temperature_sans_echec(Z_limit,nz,prm,dt,tf) :
     """Fonction qui permet l'utilisation de la MDF peu importe la proportion glace béton en utilisant
-    un nombre de point dynamique.
+    un nombre de points dynamique.
+    
     Entrées :
-        - Z : Bornes du domaine en z, Z = [z_min, z_max]
-        - nx : Discrétisation de l'espace en x (nombre de points)
+        - Z_limit : Bornes du domaine en z, Z_limit = [z_min, z_max]
         - nz : Discrétisation de l'espace en z (nombre de points)
         - prm : objet contenant tous les paramètres physiques du problème
         - dt : pas de temps 
         - tf : temps final
+        
     Sorties
         -temp[1][-1,-1] : Temperature à la surface après 90min
     """
@@ -387,14 +400,16 @@ def temperature_sans_echec(Z_limit,nz,prm,dt,tf) :
 
 def trouver_nombre_points(n_start,dt,tf,Z,prm,tol,limit_points):
     """Fonction qui retourne le nombre de points minimum pour avoir une erreur minimum
+    
     Entrées :
-        - Z_limit : Bornes du domaine en z, Z = [z_min, z_max]
-        - nz : Discrétisation de l'espace en z (nombre de points)
-        - prm : objet contenant tous les paramètres physiques du problème
-        - dt : pas de temps 
+        - n_start : Nombre de points auquel on commence l'analyse'
+        - dt : pas de temps
         - tf : temps final
+        - Z : Bornes du domaine en z, Z = [z_min, z_max]
+        - prm : objet contenant tous les paramètres physiques du problème
         - tol : tolerence à l'erreur
-        - limit points: nombre de points max à tester
+        - limit_points: nombre de points max à tester
+        
     Sorties
          - n : nombre de point à utiliser
          - err_plot : évolution de l'erreur en fonction du nombre de points 
