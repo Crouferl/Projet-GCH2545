@@ -102,7 +102,7 @@ for i,t in enumerate(points_temps_sec):
 points_temps_min = np.arange(0,tf+dt,dt,dtype="float")/60
 fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1],temperature_glace[1][-1,:]], ["Air","Glycol","Glace"],["solid","dashed","solid"], ["","",""], 
               xlabel="Temps [min]",
-              ylabel="Température [C°]",
+              ylabel="Température [°C]",
               title="Évolution de la température de l'air, du glycol et de la glace",
               savename="temp_glycol_air")
 
@@ -115,7 +115,7 @@ Z_pos = mesh_1D(Z, nz)
 
 fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1][:,-1]],["Transitoire","Permanent"],["solid","dashed"],["",""],
          xlabel = "Position [m]",
-         ylabel = "Température [C°]",
+         ylabel = "Température [°C]",
          title = "Profil de température dans la glace et le béton après 90min",
          xlines=[0.05,0.15],
          savename = "profile_temp_90") 
@@ -124,7 +124,7 @@ fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1]
 
 fonction_plot([Z_pos],[temperature_glace[1][:,30],temperature_glace_permanent[1][:,30]],["Transitoire","Permanent"],["solid","dashed"],["",""],
          xlabel = "Position [m]",
-         ylabel = "Température [C°]",
+         ylabel = "Température [°C]",
          title = "Profil de température dans la glace et le béton après 30min",
          xlines=[0.05,0.15],
          savename = "profile_temp_30") 
@@ -133,8 +133,8 @@ fonction_plot([Z_pos],[temperature_glace[1][:,30],temperature_glace_permanent[1]
 
 
 fonction_plot([points_temps_min,temps_temperature_experimental],[temperature_glace[1][-1,:],temperature_glace_experimental],["MDF","Expérimental"],["solid","dashed"],["",""],
-         xlabel = "Temps [sec]",
-         ylabel = "Température [C°]",
+         xlabel = "Temps [min]",
+         ylabel = "Température [°C]",
          title = "Évolution de la température à la surface de la glace selon le temps",
          xlines=[14],
          savename = "évolution_temp")    
