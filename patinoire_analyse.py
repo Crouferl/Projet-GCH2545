@@ -33,7 +33,7 @@ class parametre():
 
 prm = parametre()
 Z = [0,prm.zb+prm.zg] 
-dt = 60
+dt = 200
 tf = 5400
 
 temperature_glace_experimental = np.array([-1.00,-6.35,-5.85,-5.50,-3.60,-3.25],dtype=float)
@@ -113,23 +113,25 @@ fonction_plot([points_temps_min], [temperature_air,temperature_liquide[:,1],temp
 
 Z_pos = mesh_1D(Z, nz)
 
-fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1][:,-1]],["Transitoire","Permanent"],["solid","dashed"],["",""],
-         xlabel = "Position [m]",
-         ylabel = "Température [°C]",
-         title = "Profil de température dans la glace et le béton après 90min",
-         xlines=[0.05,0.15],
-         savename = "profile_temp_90") 
+if dt == 60 :
 
-"Profil de température après 30min"
-
-fonction_plot([Z_pos],[temperature_glace[1][:,30],temperature_glace_permanent[1][:,30]],["Transitoire","Permanent"],["solid","dashed"],["",""],
-         xlabel = "Position [m]",
-         ylabel = "Température [°C]",
-         title = "Profil de température dans la glace et le béton après 30min",
-         xlines=[0.05,0.15],
-         savename = "profile_temp_30") 
-
-"Évolution de la température en fonction du temps "
+    fonction_plot([Z_pos],[temperature_glace[1][:,-1],temperature_glace_permanent[1][:,-1]],["Transitoire","Permanent"],["solid","dashed"],["",""],
+             xlabel = "Position [m]",
+             ylabel = "Température [°C]",
+             title = "Profil de température dans la glace et le béton après 90min",
+             xlines=[0.05,0.15],
+             savename = "profile_temp_90") 
+    
+    "Profil de température après 30min"
+    
+    fonction_plot([Z_pos],[temperature_glace[1][:,30],temperature_glace_permanent[1][:,30]],["Transitoire","Permanent"],["solid","dashed"],["",""],
+             xlabel = "Position [m]",
+             ylabel = "Température [°C]",
+             title = "Profil de température dans la glace et le béton après 30min",
+             xlines=[0.05,0.15],
+             savename = "profile_temp_30") 
+    
+    "Évolution de la température en fonction du temps "
 
 
 fonction_plot([points_temps_min,temps_temperature_experimental],[temperature_glace[1][-1,:],temperature_glace_experimental],["MDF","Expérimental"],["solid","dashed"],["",""],
