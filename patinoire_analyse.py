@@ -32,7 +32,7 @@ class parametre():
     Ti = -1 #[°C]
 
 prm = parametre()
-Z = [0,prm.zb+prm.zg]
+Z = [0,prm.zb+prm.zg] 
 dt = 60
 tf = 5400
 
@@ -42,7 +42,7 @@ temps_temperature_experimental = t_test = np.array([0,2,7,15,45,90],dtype=int)
 
 
 
-nz,n_data =trouver_nombre_points(4, dt, tf, Z, prm, 0.5, 25)
+nz,n_data =trouver_nombre_points(4, 60, tf, Z, prm, 0.5, 25)
 
 fonction_plot([n_data[:,0]], [n_data[:,1],n_data[:,2],n_data[:,3]], ["T=0min","T=15min","T=90min"], ["solid","solid","solid"], ["","",""],
               xlabel='Nombre de points', 

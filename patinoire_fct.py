@@ -399,7 +399,7 @@ def temperature_sans_echec(Z_limit,nz,prm,dt,tf) :
     
 
 def trouver_nombre_points(n_start,dt,tf,Z,prm,tol,limit_points):
-    """Fonction qui retourne le nombre de points minimum pour avoir une erreur minimum
+    """Fonction qui retourne le nombre de points minimum pour avoir une erreur minimum avec un dt de 60 sec
     
     Entrées :
         - n_start : Nombre de points auquel on commence l'analyse'
