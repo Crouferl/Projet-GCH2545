@@ -46,7 +46,7 @@ class Test:
         err_mdf = abs(np.asarray(test_T - T))
         
     
-        assert (all(err_mdf < 2))
+        assert (all(err_mdf < 0.5))
     
     def test_mdf_permanent(self):
         Z = [0,round(prm.zb+prm.zg,5)]
@@ -64,6 +64,6 @@ class Test:
         err_mdf = abs(np.asarray(test_T - T))
         
     
-        assert (all(err_mdf < 2))
+        assert (all(err_mdf < 0.5))
 
 
